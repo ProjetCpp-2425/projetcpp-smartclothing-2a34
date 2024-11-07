@@ -321,6 +321,9 @@ font: 700 8pt &quot;Segoe UI&quot;;</string>
           <height>41</height>
          </rect>
         </property>
+        <property name="text">
+         <string/>
+        </property>
        </widget>
        <widget class="QLineEdit" name="l6">
         <property name="geometry">
@@ -330,6 +333,9 @@ font: 700 8pt &quot;Segoe UI&quot;;</string>
           <width>151</width>
           <height>41</height>
          </rect>
+        </property>
+        <property name="text">
+         <string/>
         </property>
        </widget>
        <widget class="QLineEdit" name="l3">
@@ -341,6 +347,9 @@ font: 700 8pt &quot;Segoe UI&quot;;</string>
           <height>41</height>
          </rect>
         </property>
+        <property name="text">
+         <string/>
+        </property>
        </widget>
        <widget class="QLineEdit" name="l4">
         <property name="geometry">
@@ -350,6 +359,9 @@ font: 700 8pt &quot;Segoe UI&quot;;</string>
           <width>151</width>
           <height>41</height>
          </rect>
+        </property>
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </widget>
@@ -410,7 +422,7 @@ font: 700 10pt &quot;Segoe UI&quot;;</string>
                                                     border-color: rgb(24, 49, 83);
                                                     }</string>
        </property>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="modifier">
         <property name="geometry">
          <rect>
           <x>50</x>
@@ -625,9 +637,9 @@ font: 700 8pt &quot;Segoe UI&quot;;</string>
       <widget class="QTableView" name="tableView">
        <property name="geometry">
         <rect>
-         <x>550</x>
-         <y>390</y>
-         <width>491</width>
+         <x>470</x>
+         <y>400</y>
+         <width>711</width>
          <height>221</height>
         </rect>
        </property>

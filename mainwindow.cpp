@@ -17,7 +17,6 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_ajouter_clicked() {
     int IDTRANSACTION = ui->l1->text().toInt();
-    // Vérifie que l'ID est de longueur 8 et non nul
     if (ui->l1->text().length() != 8 || IDTRANSACTION == 0) {
         QMessageBox::warning(this, "Erreur", "Veuillez entrer un ID valide de longueur 8 non null.");
         return;
@@ -26,7 +25,6 @@ void MainWindow::on_ajouter_clicked() {
     QDateTime DATEHEUREAJOUT = ui->date->dateTime();
     QString LISTEARTICLES = ui->l3->text();
 
-    // Vérification de la valeur taxes
     bool istaxesFloat = false;
     float taxes = ui->l4->text().toFloat(&istaxesFloat);
     if (!istaxesFloat) {
@@ -34,7 +32,7 @@ void MainWindow::on_ajouter_clicked() {
         return;
     }
 
-    // Vérification de la valeur reduction
+
     bool isreductionFloat = false;
     float reduction = ui->l6->text().toFloat(&isreductionFloat);
     if (!isreductionFloat) {
@@ -55,12 +53,12 @@ void MainWindow::on_ajouter_clicked() {
 
 
 void MainWindow::on_supprimer_clicked() {
-    int ids = ui->l7->text().toInt();
-    // Appel de la fonction de suppression
-    bool test = transactionModel.supprimer(ids);
+    int IDTRANSACTION = ui->l7->text().toInt();
+
+    bool test = transactionModel.supprimer(IDTRANSACTION);
 
     if (test) {
-        // Rafraîchissement du modèle pour afficher les données mises à jour
+
         ui->tableView->setModel(transactionModel.afficher());
 
         QMessageBox::information(this, QObject::tr("Succès"),
@@ -98,9 +96,8 @@ void MainWindow::on_modifier_clicked() {
     float montant = ui->l2->value();
     QString METHODEPAIEMENT = ui->box->currentText();
 
-    // Appel à la méthode modifier
     if (transactionModel.modifier(IDTRANSACTION, DATEHEUREAJOUT, LISTEARTICLES, taxes, reduction, montant, METHODEPAIEMENT)) {
-        ui->tableView->setModel(transactionModel.afficher());  // Rafraîchissement de l'affichage
+        ui->tableView->setModel(transactionModel.afficher());
         QMessageBox::information(this, "Succès", "Transaction modifiée avec succès.");
     } else {
         QMessageBox::warning(this, "Erreur", "Erreur lors de la modification de la transaction.");
