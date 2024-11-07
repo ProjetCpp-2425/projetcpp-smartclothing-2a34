@@ -1,0 +1,68 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>att.JxGNf9ri6dBpSwpODZsR4_pEsaNhrN7ltydNHqVw6Qw.jpg</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>id.webp</file>
+        <file>salaire.jpg</file>
+        <file>poste.jpg</file>
+        <file>images.png</file>
+        <file>email.jpg</file>
+        <file>statisques.png</file>
+        <file>extension-pdf.png</file>
+        <file>sort.png</file>
+        <file>aaaa.png</file>
+        <file>recherche.png</file>
+        <file>att.O-oUlScoWOOcg17Y4aOaewIZs8PjztpJjcmmNLEJd98 (1).jpg</file>
+        <file>tajrib(1).jpg</file>
+        <file>fle.jpg</file>
+        <file>fleche.jpg</file>
+        <file>conge.png</file>
+        <file>managementprv.png</file>
+        <file>embauche.png</file>
+        <file>salairetot.png</file>
+        <file>supp.jpg</file>
+        <file>naissance.png</file>
+        <file>presence.jpg</file>
+        <file>nom.webp</file>
+        <file>prese.webp</file>
+        <file>cin.png</file>
+        <file>m.png</file>
+        <file>10127.png</file>
+        <file>phone.jpg</file>
+    </qresource>
+    <qresource prefix="/clothes">
+        <file>att.3B-5l7rV58uF2QZTGHNEPU4ixBOjg184gUKKbh6rjh0.jpg</file>
+        <file>att.3JTR1tFJOIK-pdc51rfdgWtjUfYR4LYhoFCY7PHWAck.jpg</file>
+        <file>att.AcbvynZ54z_tzSUrT89Yi4mQ9ltcY99JwMy_rP2iqcU.jpg</file>
+        <file>att.JHumOhREdJ8Z8dWfJsOG8jgioIfgh-vudcx_-F_TT3M.jpg</file>
+        <file>att.JxGNf9ri6dBpSwpODZsR4_pEsaNhrN7ltydNHqVw6Qw.jpg</file>
+        <file>att.pvc0cuqo7wz3r9M43JDXwe6zfke7R8wsOIgKvunzjcs.jpg</file>
+    </qresource>
+    <qresource prefix="/statistiques">
+        <file>Blue Corporate Infographic Statistics Donut Chart Instagram Post.png</file>
+    </qresource>
+    <qresource prefix="/dua transaction">
+        <file>att.zctJ_r-VpFa2GLien_TEowdLooQqYglmpwvZ63-psLY.jpg</file>
+        <file>att.dXoyG8urFXrWHE9u9jdKuimfosjg4ul4NLUMmF7iIDo.jpg</file>
+    </qresource>
+    <qresource prefix="/new/prefix1">
+        <file>stat.png</file>
+        <file>aaaa.png</file>
+        <file>ajouter.png</file>
+        <file>att.8X1-Un7dEh0fDhLeJ6FmMeawz0hPymeN8qtNN8VrMSE.jpg</file>
+        <file>att.fDno29k0srTrxfdk89trq07o6N7unAdMw5yrAXOuxDQ.jpg</file>
+        <file>att.upmaGDuMtYy27e0yOb5azWW_AkY1DKvsFyveHLObKaI.jpg</file>
+        <file>att.yio5PkF3Lo8O-jf-ll9jIfrN_BOhs5NNacdmXuGL3p8.jpg</file>
+        <file>att.zctJ_r-VpFa2GLien_TEowdLooQqYglmpwvZ63-psLY.jpg</file>
+        <file>barchar2.png</file>
+        <file>barchart.png</file>
+        <file>dora.png</file>
+        <file>fabriquer.png</file>
+        <file>graph.png</file>
+        <file>loupe (1).png</file>
+        <file>notf.png</file>
+        <file>out.png</file>
+        <file>para.png</file>
+    </qresource>
+</RCC>
