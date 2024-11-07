@@ -52,10 +52,10 @@ QSqlQueryModel* Transaction::afficher() {
 bool Transaction::supprimer(int IDTRANSACTION) {
     QSqlQuery query;
     query.prepare("DELETE FROM Transaction WHERE IDTRANSACTION = :IDTRANSACTION");
-    query.bindValue(":IDTRANSACTION", IDTRANSACTION);  // Utiliser directement l'entier id
+    query.bindValue(":IDTRANSACTION", IDTRANSACTION);
 
     if (!query.exec()) {
-        // Affichage de l'erreur en cas d'échec
+
         qDebug() << "Erreur lors de la suppression :" << query.lastError().text();
         return false;
     }
