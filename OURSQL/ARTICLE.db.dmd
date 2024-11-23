@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="ARTICLE.db" id="D544A185-550A-EDDF-5DA3-EE42A783BAE0" version="3.5">
+<createdBy>issle</createdBy>
+<createdTime>2024-11-05 22:33:01 UTC</createdTime>
+<ownerDesignName>ARTICLE.db</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>D544A185-550A-EDDF-5DA3-EE42A783BAE0</designId>
+</OSDM_Design>

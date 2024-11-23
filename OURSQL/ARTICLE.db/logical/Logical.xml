@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="5DC1904A-1A79-2C37-4DA8-E53D26089D50" mainViewID="0F673FB6-F262-15CE-9E71-EF9644697F00">
+<createdBy>issle</createdBy>
+<createdTime>2024-11-05 22:33:01 UTC</createdTime>
+<ownerDesignName>ARTICLE.db</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>
