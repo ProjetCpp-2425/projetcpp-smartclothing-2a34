@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>notfication.png</file>
+        <file>notfication (1).png</file>
+        <file>logoo.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>10127.png</file>
+        <file>att.3JTR1tFJOIK-pdc51rfdgWtjUfYR4LYhoFCY7PHWAck.jpg</file>
+        <file>att.JxGNf9ri6dBpSwpODZsR4_pEsaNhrN7ltydNHqVw6Qw.jpg</file>
+        <file>cin.png</file>
+        <file>conge.png</file>
+        <file>dora.png</file>
+        <file>email.jpg</file>
+        <file>embauche.png</file>
+        <file>id.webp</file>
+        <file>images.png</file>
+        <file>m.png</file>
+        <file>mail.jpg</file>
+        <file>managementprv.png</file>
+        <file>naissance.png</file>
+        <file>phone.jpg</file>
+        <file>poste.jpg</file>
+        <file>presence.jpg</file>
+        <file>recherche.png</file>
+        <file>salaire.jpg</file>
+        <file>salaire.png</file>
+        <file>salairetot.png</file>
+        <file>sort.png</file>
+        <file>statisques.png</file>
+        <file>supp.jpg</file>
+        <file>telephone.jpg</file>
+    </qresource>
+    <qresource prefix="/new/prefix1"/>
+</RCC>
