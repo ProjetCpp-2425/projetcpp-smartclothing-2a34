@@ -4,6 +4,8 @@ QT += core-private
 QT += charts
 QT += network
 QT += core gui serialport
+QT += axcontainer
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

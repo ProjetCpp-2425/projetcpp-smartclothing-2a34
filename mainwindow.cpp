@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QtCharts/QChartView>
 #include <QDesktopServices>
+#include <QSystemTrayIcon>
 
 #include <QtCharts/QChart>
 #include <QtCharts/QBarSeries>
@@ -51,20 +52,110 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
  ui->stackedWidgetSign->setCurrentIndex(0);
     ui->stackedWidgetlogin->setCurrentIndex(0);
- int arduinoConnected = arduino.connectToArduino();
- if (arduinoConnected) {
-    // connect(arduino.getSerial(), &QSerialPort::readyRead, this, &MainWindow::onArduinoDataReceived);
-     qDebug() << "Arduino connected successfully!";
- } else {
-     qDebug() << "Failed to connect to Arduino.";
- }
+    if (arduino.connectToArduino()) {
+        connect(arduino.getSerial(), &QSerialPort::readyRead, this, &MainWindow::readFromArduino);
+        qDebug() << "Arduino connected successfully.";
+    } else {
+        qDebug() << "Failed to connect to Arduino.";
+    }
 
- //connect(arduino.getSerial(), &QSerialPort::readyRead, this, &MainWindow::readArduinoData);
 
     connect(ui->ajoute_employe, &QPushButton::clicked, this, &MainWindow::on_ajoute_employe_clicked);
 
  QByteArray dataToSend = "Hello Arduino!";  // You can replace this with the appropriate message
  arduino.writeToArduino(dataToSend);
+ setupLineEditCompletion();
+ applyStyleSheet();
+
+ ui->listWidget_Tailles->setSelectionMode(QAbstractItemView::MultiSelection);
+ ui->listWidget_Tailles->addItems(QStringList() << "XS" << "S" << "M" << "L" << "XL" << "XXL" << "XXXL");
+
+ ui->tableViewArticle->setModel(ART.afficherArticle());
+ populateThemeBox();
+ populateAnimationBox();
+ populateLegendBox();
+
+ qApp->setPalette(palette());
+
+ trayIcon = new QSystemTrayIcon(this);
+ trayIcon->setIcon(QIcon(":/icons/your_icon.png"));
+ trayIcon->setVisible(true);
+
+ QTimer *timer = new QTimer(this);
+ connect(timer, &QTimer::timeout, this, &MainWindow::notifyLowStock);
+ timer->start(86400000);
+
+ connect(ui->pushButton_notifyAnniversary, &QPushButton::clicked, this, &MainWindow::notifyAnniversary);
+ connect(ui->pushButton_notifyLowStock, &QPushButton::clicked, this, &MainWindow::notifyLowStock);
+ connect(ui->pushButton_notifyPromotion, &QPushButton::clicked, this, &MainWindow::notifyPromotion);
+
+ QMenu *trayIconMenu = new QMenu(this);
+ QAction *quitAction = new QAction("Quitter", this);
+ connect(quitAction, &QAction::triggered, this, &QApplication::quit);
+ trayIconMenu->addAction(quitAction);
+ trayIcon->setContextMenu(trayIconMenu);
+
+ notifyAnniversary();
+ notifyLowStock();
+ notifyPromotion();
+
+
+
+ ui->tableViewArticle->setStyleSheet("QTableView::item { background-color: rgb(173, 216, 230); color: black; }");
+
+ connect(ui->rechercher, &QPushButton::clicked, this, &MainWindow::on_rechercher_clicked);
+ connect(ui->comboBox_2, SIGNAL(activated(int)), this, SLOT(on_comboBox_2_activated(int)));
+
+ notificationModel = new QStandardItemModel(this);
+
+ connect(ui->rechercher, &QPushButton::clicked, this, &MainWindow::on_rechercher_clicked);
+
+ connect(ui->themeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::changeTheme);
+
+ ui->stacked->addWidget(ui->ajouter);
+ ui->stacked->addWidget(ui->articles);
+ ui->stacked->addWidget(ui->Statiques);
+ ui->stacked->addWidget(ui->notification);
+ ui->stacked->addWidget(ui->Fabriquer);
+
+ connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::ajouter);
+ connect(ui->pushButton_3, &QPushButton::clicked, this, &MainWindow::articles);
+ connect(ui->pushButton_4, &QPushButton::clicked, this, &MainWindow::Statiques);
+ connect(ui->pushButton_5, &QPushButton::clicked, this, &MainWindow::notification);
+
+ connect(ui->pushButton_7, &QPushButton::clicked, this, &MainWindow::ajouter);
+ connect(ui->pushButton_8, &QPushButton::clicked, this, &MainWindow::articles);
+ connect(ui->pushButton_9, &QPushButton::clicked, this, &MainWindow::Statiques);
+ connect(ui->pushButton_10, &QPushButton::clicked, this, &MainWindow::notification);
+
+ connect(ui->FABRIQUER,&QPushButton::clicked, this, &MainWindow::Fabriquer);
+
+ connect(ui->ID_ARTICLE, &QPushButton::clicked, this, &MainWindow::on_ID_ARTICLE_clicked);
+
+ ui->stackedWidgetArticle->addWidget(ui->DiaCirculaire);
+ ui->stackedWidgetArticle->addWidget(ui->Graph1);
+ ui->stackedWidgetArticle->addWidget(ui->Graph2);
+
+ connect(ui->pushButton_DiagrammCirculaire, &QPushButton::clicked, this, &MainWindow::DiaCirculaire);
+ connect(ui->pushButton_GraphiqueBarres, &QPushButton::clicked, this, &MainWindow::Graph2);
+
+ ui->comboBox->setStyleSheet("   border: 2px solid white;border-radius: 8px;padding: 1px 18px 1px 3px;background-color: black;color: white;height: 35px");
+ ui->comboBox->setStyleSheet(" padding-left: 15px;font-weight: bold;  border: 0;selection-background-color: #298089;");
+ ui->pushButton_DiagrammCirculaire->setStyleSheet("height:30px;border-radius:5px");
+ ui->pushButton_GraphiqueBarres->setStyleSheet("height:30px;border-radius:5px");
+
+ connect(ui->tableViewArticle->model(), &QAbstractItemModel::dataChanged, this, &MainWindow::notifyLowStock);
+
+ populateThemeBox();
+
+
+
+
+
+
+
+
+
 
     connect(ui->buttonToEmploye, &QPushButton::clicked, this, &MainWindow::navigateToEmploye);
     connect(ui->buttonToProduit, &QPushButton::clicked, this, &MainWindow::navigateToProduit);
@@ -88,7 +179,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-
     initializeStackedWidgetSignPages();
 
     connect(ui->retour, &QPushButton::clicked, this, &MainWindow::navigateToEmploye);
@@ -99,6 +189,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+    connect(ui->sortie_2, &QPushButton::clicked, this, &MainWindow::on_sortie_clicked);
+    connect(ui->sortie_3, &QPushButton::clicked, this, &MainWindow::on_sortie_clicked);
+    connect(ui->sortie_4, &QPushButton::clicked, this, &MainWindow::on_sortie_clicked);
 
 
 
@@ -168,40 +261,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->mdpchanger,&QPushButton::clicked,this,&MainWindow::on_verifyCodeButton_clicked);
 
 
-    connect(ui->rechercher, &QPushButton::clicked, this, &MainWindow::on_rechercher_clicked);
 
-
-
-    connect(ui->themeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),this, &MainWindow::changeTheme);
-
-
-
-    connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::ajouter);
-    connect(ui->pushButton_3, &QPushButton::clicked, this, &MainWindow::articles);
-    connect(ui->pushButton_4, &QPushButton::clicked, this, &MainWindow::Statiques);
-    connect(ui->pushButton_5, &QPushButton::clicked, this, &MainWindow::notification);
-
-    connect(ui->pushButton_7, &QPushButton::clicked, this, &MainWindow::ajouter);
-    connect(ui->pushButton_8, &QPushButton::clicked, this, &MainWindow::articles);
-    connect(ui->pushButton_9, &QPushButton::clicked, this, &MainWindow::Statiques);
-    connect(ui->pushButton_10, &QPushButton::clicked, this, &MainWindow::notification);
-
-    connect(ui->FABRIQUER,&QPushButton::clicked, this, &MainWindow::Fabriquer);
-
-    connect(ui->ID_ARTICLE, &QPushButton::clicked, this, &MainWindow::on_ID_ARTICLE_clicked);
-
-    ui->listWidget_Tailles->setSelectionMode(QAbstractItemView::MultiSelection);
-
-    // Ajouter des éléments à la liste pour tester
-    ui->listWidget_Tailles->addItems(QStringList() << "XS" << "S" << "M" << "L" << "XL" << "XXL" << "XXXL");
-
-    ui->tableViewArticle->setModel(ART.afficherArticle());
-    ui->tableViewArticle->setStyleSheet("QTableView::item { background-color: rgb(173, 216, 230); color: black; }");
-
-
-    connect(ui->pushButton_DiagrammCirculaire, &QPushButton::clicked, this, &MainWindow::DiaCirculaire);
-    connect(ui->pushButton_GraphiqueBarres, &QPushButton::clicked, this, &MainWindow::Graph2);
-    connect(ui->tableViewArticle->model(), &QAbstractItemModel::dataChanged, this, &MainWindow::notifyLowStock);
     ui->label_169->hide();
     ui->tableViewConge->hide();
     ui->accepterconge->hide();
@@ -210,18 +270,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->textEdit_congeDescription->hide();
     ui->calendarWidget->hide();
 
-    ui->labelposte1->hide();
-    ui->labelposte2->hide();
-    ui->labelposte3->hide();
-    ui->labelposte4->hide();
-    ui->labelposte5->hide();
+
     ui->label_216->show();
     employeModel = new QSqlQueryModel(this);
     afficherEmployes();
     displaydemandeconge();
 
 
-    connect(ui->savefinger, &QPushButton::clicked, this, &MainWindow::saveFingerprint);
 
 }
 
@@ -1257,12 +1312,12 @@ void MainWindow::ajouter()
 
 void MainWindow::articles()
 {
-    ui->stacked->setCurrentIndex(4);
+    ui->stacked->setCurrentIndex(1);
 }
 
 void MainWindow::Statiques()
 {
-    ui->stacked->setCurrentIndex(1);
+    ui->stacked->setCurrentIndex(2);
 }
 
 void MainWindow::notification()
@@ -1272,7 +1327,7 @@ void MainWindow::notification()
 
 void MainWindow::Fabriquer()
 {
-    ui->stacked->setCurrentIndex(2);
+    ui->stacked->setCurrentIndex(4);
 }
 
 void MainWindow::DiaCirculaire()
@@ -1595,7 +1650,7 @@ void MainWindow::changeTheme(int index)
         break;
     }
 
-    ui->stackedWidget->setStyleSheet(styleSheet);
+    ui->stackedWidgetArticle->setStyleSheet(styleSheet);
 }
 
 
@@ -2109,7 +2164,7 @@ void MainWindow::displayTypeStatistics() {
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-    QLayout *existingLayout = ui->chartPlaceholder->layout();
+    QLayout *existingLayout = ui->chartPlaceholder_2->layout();
     if (existingLayout) {
         QLayoutItem *item;
         while ((item = existingLayout->takeAt(0)) != nullptr) {
@@ -2121,12 +2176,12 @@ void MainWindow::displayTypeStatistics() {
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(chartView);
-    ui->chartPlaceholder->setLayout(layout);
+    ui->chartPlaceholder_2->setLayout(layout);
 
     qDebug() << "Graphique ajouté avec succès.";
 }
 void MainWindow::on_pushButton_DiagrammCirculaire_clicked() {
-    ui->stackedWidget->setCurrentWidget(ui->DiaCirculaire);
+    ui->stackedWidgetArticle->setCurrentWidget(ui->DiaCirculaire);
     displayTypeStatistics(); // Affiche les statistiques des types sous forme de graphique circulaire
 }
 
@@ -2201,7 +2256,7 @@ void MainWindow::displaySizeStatistics() {
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-    QLayout *existingLayout = ui->chartPlaceholder_2->layout();
+    QLayout *existingLayout = ui->chartPlaceholder_3->layout();
     if (existingLayout) {
         QLayoutItem *item;
         while ((item = existingLayout->takeAt(0)) != nullptr) {
@@ -2213,13 +2268,13 @@ void MainWindow::displaySizeStatistics() {
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(chartView);
-    ui->chartPlaceholder_2->setLayout(layout);
+    ui->chartPlaceholder_3->setLayout(layout);
 
     qDebug() << "Graphique à barres des tailles généré avec succès.";
 }
 
 void MainWindow::on_pushButton_GraphiqueBarres_clicked() {
-    ui->stackedWidget->setCurrentWidget(ui->Graph2);
+    ui->stackedWidgetArticle->setCurrentWidget(ui->Graph2);
     displaySizeStatistics();
 }
 
@@ -2613,7 +2668,7 @@ void MainWindow::applyStyleSheet()
 
 void MainWindow::setupLineEditCompletion()
 {
-    // Liste des valeurs autorisées
+    // Liste des valeurs autorisée
     QStringList valeursAutorisees = {"Chemise", "Pantalon", "Veste", "Robe", "Pull", "Jupe"};
 
     // Configurer le QCompleter
@@ -2627,96 +2682,101 @@ void MainWindow::setupLineEditCompletion()
 
 //arduinors
 // MainWindow.cpp
-void MainWindow::readArduinoData() {
-    // Read the data received from Arduino
+void MainWindow::readFromArduino() {
+    // Read data from Arduino
     QByteArray data = arduino.readFromArduino();
-    if (!data.isEmpty()) {
-        qDebug() << "Received from Arduino: " << data;
-        // Process the data, e.g., display it on the UI or save it
-    }
-}
-void MainWindow::saveFingerprint() {
-    QString id = ui->fingerlineedit->text().trimmed();  // Get ID from the input field
+    QString input = QString::fromUtf8(data).trimmed(); // Convert to QString and trim whitespace
 
-    if (id.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Veuillez entrer un ID valide.");
-        return;
-    }
+    // Log the received data for debugging purposes
+    qDebug() << "Received from Arduino:" << input;
 
-    Employe employee;
-    employee.setIdEmploye(id);  // Set the employee's ID
+    QString prefix = "ID sent to Qt: ";
+    QString responsePrefix = "Received from Qt: MSG:";
 
-    if (employee.load()) {  // Check if the employee exists in the database
-        QMessageBox::information(this, "Succès", "Employé trouvé. Placez votre doigt sur le capteur.");
+    if (input.startsWith(prefix)) {
+        // Extract the ID part by removing the prefix
+        QString employeeId = input.mid(prefix.length()).trimmed();
 
-        // Send a command to Arduino to start fingerprint capture
-        arduino.writeToArduino("WAIT_FP\n");  // Assume this function sends the command
+        // Log the extracted employee ID
+        qDebug() << "Extracted Employee ID:" << employeeId;
 
-        // Optional debug log (useful for testing)
-        qDebug() << "Command 'WAIT_FP' sent to Arduino.";
+        // Validate if the extracted employee ID is 8 digits and numeric
+        bool isNumeric;
+        int idValue = employeeId.toInt(&isNumeric);
+        if (employeeId.length() == 8 && isNumeric && idValue > 0) {
+            Employe employee;
+            employee.setIdEmploye(employeeId); // Set the employee ID (now a QString)
 
-        // Wait for the response from Arduino
-        QByteArray data = arduino.readFromArduino();
-        qDebug() << "Response from Arduino: " << data;
-
-        if (data.contains("FP Captured!")) {
-            employee.setFingerprint(data);  // Save the fingerprint data
-            if (employee.save()) {  // Save changes to the database
-                QMessageBox::information(this, "Succès", "Empreinte enregistrée avec succès !");
+            // Check if the employee exists
+            if (employee.load()) { // Assuming `load()` checks the database for the employee
+                updateEmployeeStatus(employee); // Call the update function to handle presence and overtime
+                qDebug() << "Employee found:" << employeeId; // Log employee found
             } else {
-                QMessageBox::critical(this, "Erreur", "Échec de l'enregistrement de l'empreinte.");
+                QString message = "Employe non trouve";
+                arduino.writeToArduino(("MSG:" + message).toUtf8());
+                qDebug() << "Employee not found for ID:" << employeeId;
             }
-        } else if (data.contains("FP_SAVE_ERROR")) {
-            QMessageBox::warning(this, "Erreur", "Aucune empreinte capturée ou échec du capteur.");
         } else {
-            QMessageBox::critical(this, "Erreur", "Réponse inconnue reçue d'Arduino : " + QString(data));
+            QString message = "ID invalide";
+            arduino.writeToArduino(("MSG:" + message).toUtf8());
+            qDebug() << "Invalid ID format (not 8 digits or non-numeric):" << employeeId;
         }
+    } else if (input.startsWith(responsePrefix)) {
+        // Handle the message received from Arduino
+        QString responseMessage = input.mid(responsePrefix.length()).trimmed();
+
+        // Log the message received from Arduino
+        qDebug() << "Message received from Arduino:" << responseMessage;
+
+        // You can now process this message further or update any necessary state in Qt
+        // For example, if you want to update UI components or trigger actions based on the message
     } else {
-        QMessageBox::warning(this, "Erreur", "ID introuvable. Veuillez vérifier.");
+        qDebug() << "Unexpected input from Arduino:" << input; // Log unexpected input
     }
 }
 
 
-// Process incoming data from Arduino
-void MainWindow::onArduinoDataReceived() {
-    dataFromArduino += arduino.readFromArduino();
-    if (!dataFromArduino.endsWith("\n")) return;  // Wait for full fingerprint data
 
-    QByteArray capturedFingerprint = dataFromArduino.trimmed();
-    dataFromArduino.clear();
 
-    Employe employee;
-    employee.setFingerprint(capturedFingerprint);
-
-    if (employee.loadfs()) {  // Load based on fingerprint
-        updateEmployeeStatus(employee);
-    } else {
-        qDebug() << "Empreinte non reconnue.";
-    }
-}
-
-// Update the employee's presence status
 void MainWindow::updateEmployeeStatus(Employe &employee) {
     QString currentTime = QTime::currentTime().toString("hh:mm:ss");
+    QString newPresence;
+    QString message;
 
+    // Toggle presence status
     if (employee.getPresence() == "Absent") {
-        employee.setPresence("Present");
-        qDebug() << "Bonjour, " << employee.getPrenom() << " " << employee.getNom() << " at " << currentTime;
-
-        // Send message to Arduino
-        QString message = "Bonjour " + employee.getPrenom() + " " + employee.getNom() + " at " + currentTime;
-        arduino.writeToArduino(message.toUtf8());
+        newPresence = "Present";
+        message = "Bonjour " + employee.getPrenom() + " " + employee.getNom() + " at " + currentTime;
+        employee.setHeuresSupplementaires(employee.getHeuresSupplementaires() + 1); // Increment overtime hours
     } else if (employee.getPresence() == "Present") {
-        employee.setPresence("Absent");
-        qDebug() << "Au revoir, " << employee.getPrenom() << " " << employee.getNom() << " at " << currentTime;
-
-        // Send message to Arduino
-        QString message = "Au revoir " + employee.getPrenom() + " " + employee.getNom() + " at " + currentTime;
-        arduino.writeToArduino(message.toUtf8());
+        newPresence = "Absent";
+        message = "Au revoir " + employee.getPrenom() + " " + employee.getNom() + " at " + currentTime;
+    } else {
+        QMessageBox::warning(this, "Erreur", "Statut de présence inconnu.");
+        return; // Abort if presence status is invalid
     }
 
-    // Adjust heures_supplementaires
-    if (employee.getPresence() == "Present") {
-        employee.setHeuresSupplementaires(employee.getHeuresSupplementaires() + 1);
+    // Update employee presence
+    employee.setPresence(newPresence);
+
+    // Update the database
+    QSqlQuery query;
+    query.prepare(
+        "UPDATE EMPLOYE SET Presence = :presence, Heures_supplementaires = :heures_supplementaires "
+        "WHERE Id_employe = :id_employe");
+    query.bindValue(":presence", employee.getPresence());
+    query.bindValue(":heures_supplementaires", employee.getHeuresSupplementaires());
+    query.bindValue(":id_employe", employee.getIdEmploye());
+
+    if (query.exec()) {
+        afficherEmployes(); // Refresh the displayed employees
+        QMessageBox::information(this, "Succès", "Présence et heures supplémentaires mises à jour.");
+        qDebug() << message;
+
+        // Send message to Arduino
+        arduino.writeToArduino(("MSG:" + message).toUtf8());
+    } else {
+        QMessageBox::warning(this, "Erreur", "La mise à jour de la base de données a échoué: " + query.lastError().text());
+        qDebug() << "Database error:" << query.lastError().text();
     }
 }

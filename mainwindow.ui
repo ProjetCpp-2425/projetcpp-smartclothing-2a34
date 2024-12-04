@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1411</width>
+    <width>1342</width>
     <height>975</height>
    </rect>
   </property>
@@ -38,7 +38,7 @@ border-color: rgb(240, 240, 240);</string>
       </rect>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="page_14">
       <widget class="QWidget" name="widget_32" native="true">
@@ -1156,9 +1156,9 @@ border-color: rgb(251, 251, 243);</string>
        <widget class="QWidget" name="Page2" native="true">
         <property name="geometry">
          <rect>
-          <x>80</x>
+          <x>97</x>
           <y>60</y>
-          <width>178</width>
+          <width>161</width>
           <height>770</height>
          </rect>
         </property>
@@ -1300,8 +1300,8 @@ height:30px;
          <rect>
           <x>20</x>
           <y>50</y>
-          <width>62</width>
-          <height>770</height>
+          <width>81</width>
+          <height>771</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -1518,7 +1518,7 @@ QDateEdit
 </string>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="ajouter">
               <widget class="QLabel" name="label_10">
@@ -2167,7 +2167,7 @@ font-size:20px;
                  <string>Transaction</string>
                 </property>
                </widget>
-               <widget class="QPushButton" name="pushButton_16">
+               <widget class="QPushButton" name="sortie_2">
                 <property name="geometry">
                  <rect>
                   <x>920</x>
@@ -2333,7 +2333,7 @@ QPushButton::checked{
                 </rect>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>2</number>
                </property>
                <widget class="QWidget" name="DiaCirculaire">
                 <widget class="QLabel" name="statsLabel">
@@ -5937,71 +5937,6 @@ border-color: rgb(212, 153, 162)
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;statistique selon les postes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;  des employés&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
-       <widget class="QLabel" name="labelposte1">
-        <property name="geometry">
-         <rect>
-          <x>410</x>
-          <y>60</y>
-          <width>231</width>
-          <height>81</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#d499a2;&quot;&gt;POSTE 1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="labelposte4">
-        <property name="geometry">
-         <rect>
-          <x>410</x>
-          <y>400</y>
-          <width>231</width>
-          <height>81</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#5e17eb;&quot;&gt;POSTE 4&lt;/span&gt;&lt;span style=&quot; color:#5e17eb;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="labelposte2">
-        <property name="geometry">
-         <rect>
-          <x>410</x>
-          <y>160</y>
-          <width>231</width>
-          <height>81</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#a1e5eb;&quot;&gt;POSTE 2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="labelposte3">
-        <property name="geometry">
-         <rect>
-          <x>410</x>
-          <y>280</y>
-          <width>231</width>
-          <height>81</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#cbc89d;&quot;&gt;POSTE 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="labelposte5">
-        <property name="geometry">
-         <rect>
-          <x>410</x>
-          <y>520</y>
-          <width>231</width>
-          <height>81</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#7ed957;&quot;&gt;POSTE 5&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
        <widget class="QWidget" name="chartPlaceholder" native="true">
         <property name="geometry">
          <rect>
@@ -7211,7 +7146,7 @@ border-radius: 50%</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1411</width>
+     <width>1342</width>
      <height>26</height>
     </rect>
    </property>
@@ -7221,5 +7156,86 @@ border-radius: 50%</string>
  <resources>
   <include location="image.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton_11</sender>
+   <signal>clicked()</signal>
+   <receiver>widget_5</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>122</x>
+     <y>832</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>136</x>
+     <y>936</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>clicked()</signal>
+   <receiver>statusbar</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>834</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>19</x>
+     <y>961</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_11</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>pushButton_11</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>826</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>838</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>40</x>
+     <y>823</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>974</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_11</sender>
+   <signal>clicked()</signal>
+   <receiver>widget_5</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>207</x>
+     <y>830</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>213</x>
+     <y>857</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

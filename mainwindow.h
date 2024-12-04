@@ -197,10 +197,10 @@ private slots:
     void handleChatbotReply(QNetworkReply* reply);
 
     void setupLineEditCompletion();
-void onArduinoDataReceived();
-    void saveFingerprint();    // Slot triggered when Arduino sends data
+//void onArduinoDataReceived();
+   // void saveFingerprint();    // Slot triggered when Arduino sends data
 
-    void readArduinoData();
+    void readFromArduino();
 
 private:
     Ui::MainWindow *ui;
