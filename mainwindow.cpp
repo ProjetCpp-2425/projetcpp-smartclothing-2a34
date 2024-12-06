@@ -12,6 +12,7 @@
 #include <QSqlTableModel>
 #include <QSqlQuery>
 #include <QHeaderView>
+<<<<<<< HEAD
 #include <QPainter>
 #include <QPdfWriter>
 #include <QNetworkAccessManager>  // For sending emails via network
@@ -26,6 +27,10 @@
 #include <QtNetwork/QSslSocket>
 #include <QtCore/QCoreApplication>
 #include <QByteArray>
+=======
+
+
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -39,7 +44,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+<<<<<<< HEAD
     model->setQuery("SELECT CIN_client, nom_c, prenom_c, numero_c, mail_c, date_inscription, type_client FROM CLIENT");
+=======
+    model->setQuery("SELECT CIN_client, nom_c, prenom_c, numero_c, mail_c, date_inscription FROM client");
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
     ui->tableView_2->setModel(model);
     // Enable clickable headers
     ui->tableView_2->horizontalHeader()->setSectionsClickable(true);
@@ -49,8 +58,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect the statistics button to its handler
     connect(ui->statsButton, &QPushButton::clicked, this, &MainWindow::on_statsButton_clicked);
+<<<<<<< HEAD
     connect(ui->btnClassify, &QPushButton::clicked, this, &MainWindow::classifyClients);
     connect(ui->envoyer_mail, &QPushButton::clicked, this, &MainWindow::on_envoyer_mail_clicked);
+=======
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 
 
     // Input field validators
@@ -193,13 +205,18 @@ void MainWindow::on_searchButton_clicked()
 
 void MainWindow::on_statsButton_clicked()
 {
+<<<<<<< HEAD
     int normalCount = 0, vipCount = 0;
+=======
+    int nomCount = 0, prenomCount = 0, numeroCount = 0;
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 
     // Query to get data from CLIENT table
     QSqlQuery query;
     query.prepare("SELECT * FROM CLIENT");
     if (query.exec()) {
         while (query.next()) {
+<<<<<<< HEAD
             int purchasesCount = query.value("purchases_count").toInt();
             QString clientType = query.value("type_client").toString();
 
@@ -222,10 +239,27 @@ void MainWindow::on_statsButton_clicked()
 
     // Calculate total clients
     int totalCount = normalCount + vipCount;
+=======
+            QString clientName = query.value("nom_c").toString();
+            QString clientPrenom = query.value("prenom_c").toString();
+            QString clientNumber = query.value("numero_c").toString();
+
+            if (!clientName.isEmpty()) nomCount++;
+            if (!clientPrenom.isEmpty()) prenomCount++;
+            if (!clientNumber.isEmpty()) numeroCount++;
+        }
+    }
+
+    // Prepare strings for display
+    QString nomCountStr = QString::number(nomCount);
+    QString prenomCountStr = QString::number(prenomCount);
+    QString numeroCountStr = QString::number(numeroCount);
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 
     // Create the pie chart series
     auto *series = new QPieSeries();
     series->setHoleSize(0.35);
+<<<<<<< HEAD
 
     // Add slices with percentage labels
     QPieSlice *normalSlice = series->append("Normal: " + QString::number(normalCount), normalCount);
@@ -243,6 +277,11 @@ void MainWindow::on_statsButton_clicked()
     // Make labels visible
     normalSlice->setLabelVisible(true);
     vipSlice->setLabelVisible(true);
+=======
+    series->append("Nom: " + nomCountStr, nomCount);
+    series->append("Prénom: " + prenomCountStr, prenomCount);
+    series->append("Numéro: " + numeroCountStr, numeroCount);
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 
     // Create the chart
     auto *chart = new QChart();
@@ -268,11 +307,21 @@ void MainWindow::on_statsButton_clicked()
     details->setText(
         QString("<h3 style='color:darkgreen'>Détails des Statistiques</h3>"
                 "<ul>"
+<<<<<<< HEAD
                 "<li><b>Normal Clients:</b> %4</li>"
                 "<li><b>VIP Clients:</b> %5</li>"
                 "</ul>")
             .arg(normalCount)
             .arg(vipCount));
+=======
+                "<li><b>Nombre de Noms:</b> %1</li>"
+                "<li><b>Nombre de Prénoms:</b> %2</li>"
+                "<li><b>Nombre de Numéros:</b> %3</li>"
+                "</ul>")
+            .arg(nomCountStr)
+            .arg(prenomCountStr)
+            .arg(numeroCountStr));
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
     details->setWordWrap(true);
     layout->addWidget(details);
 
@@ -293,6 +342,7 @@ void MainWindow::on_statsButton_clicked()
     // Hide the main UI while displaying the stats
     ui->centralwidget->hide();
 }
+<<<<<<< HEAD
 
 
 
@@ -354,6 +404,102 @@ void MainWindow::on_Telecharger_button_clicked()
 
     // Notify user
     QMessageBox::information(this, "PDF Generated", "The report has been successfully generated as 'Client_Report_Current_Month.pdf'.");
+=======
+void MainWindow::on_Telecharger_button_clicked()
+{
+    // Query client data from the database
+    QSqlQuery query;
+    query.exec("SELECT CIN_client, nom_c, prenom_c, numero_c, mail_c, date_inscription FROM CLIENT");
+
+    // Prompt user for file location
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save PDF"), "exported_client_data.pdf", tr("PDF Files (*.pdf)"));
+    if (filePath.isEmpty()) return;
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(filePath);
+
+    // Page setup
+    QPageSize pageSize(QPageSize::A2);
+    QPageLayout pageLayout(pageSize, QPageLayout::Portrait, QMarginsF(70,70,70,70)); // Larger margins for better layout
+    printer.setPageLayout(pageLayout);
+
+    QPainter painter;
+    if (!painter.begin(&printer)) {
+        QMessageBox::warning(this, tr("Error"), tr("Failed to open PDF for writing."));
+        return;
+    }
+
+    QTextDocument pdfDoc;
+    pdfDoc.setDocumentMargin(15); // Set margins for the document to avoid clipping
+
+    QTextCursor cursor(&pdfDoc);
+    QTextCharFormat titleFormat;
+    titleFormat.setFontWeight(QFont::Bold);
+    titleFormat.setFontPointSize(300); // Larger font size for title
+
+    QTextCharFormat headerFormat;
+    headerFormat.setFontWeight(QFont::Bold);
+    headerFormat.setFontPointSize(300); // Larger font size for headers
+
+    QTextCharFormat dataFormat;
+    dataFormat.setFontPointSize(300); // Larger font size for data
+
+    QTextTableFormat tableFormat;
+    tableFormat.setCellPadding(150);
+    tableFormat.setCellSpacing(30);
+    tableFormat.setHeaderRowCount(40);
+    tableFormat.setBorder(10);
+    tableFormat.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
+    tableFormat.setBorderBrush(QBrush(QColor("#D3D3D3")));
+
+    // Insert title for client data
+    cursor.insertText("Client Data Report", titleFormat);
+    cursor.insertBlock();
+    cursor.insertBlock();
+
+    // Insert table for database results
+    QTextTable* table = cursor.insertTable(1, 6, tableFormat); // 6 columns for client data (CIN, Nom, Prénom, Numéro, Email, Date)
+
+    // Header Row for table
+    QStringList headerRow;
+    headerRow << "CIN" << "First Name" << "Last Name" << "Phone Number" << "Email" << "Date of Inscription";
+
+    // Insert header into table
+    for (int i = 0; i < headerRow.size(); ++i) {
+        QTextCursor cellCursor = table->cellAt(0, i).firstCursorPosition();
+        cellCursor.insertText(headerRow[i], headerFormat);
+    }
+
+    // Insert data rows from database
+    int row = 1;
+    while (query.next()) {
+        QString cin = query.value("CIN_client").toString();
+        QString firstName = query.value("nom_c").toString();
+        QString lastName = query.value("prenom_c").toString();
+        QString phone = query.value("numero_c").toString();
+        QString email = query.value("mail_c").toString();
+        QDate dateInscription = query.value("date_inscription").toDate();
+
+        table->insertRows(table->rows(), 1);
+
+        table->cellAt(row, 0).firstCursorPosition().insertText(cin, dataFormat);
+        table->cellAt(row, 1).firstCursorPosition().insertText(firstName, dataFormat);
+        table->cellAt(row, 2).firstCursorPosition().insertText(lastName, dataFormat);
+        table->cellAt(row, 3).firstCursorPosition().insertText(phone, dataFormat);
+        table->cellAt(row, 4).firstCursorPosition().insertText(email, dataFormat);
+        table->cellAt(row, 5).firstCursorPosition().insertText(dateInscription.toString("dd/MM/yyyy"), dataFormat);
+
+        row++;
+    }
+
+    // Finalize and save the PDF
+    pdfDoc.drawContents(&painter);
+    painter.end();
+
+    // Notify user of successful export
+    QMessageBox::information(this, tr("Export Successful"), tr("Client data has been exported to PDF successfully."));
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 }
 
 void MainWindow::on_trier_activated(int index)
@@ -427,6 +573,7 @@ void MainWindow::on_tableView_2_headerClicked(int section)
     // Toggle the sorting order for the next click
     sortOrderAscending = !sortOrderAscending;
 }
+<<<<<<< HEAD
 
 void MainWindow::classifyClients() {
     QSqlQuery query;
@@ -591,3 +738,5 @@ void MainWindow::on_envoyer_mail_clicked() {
 
 
 
+=======
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b

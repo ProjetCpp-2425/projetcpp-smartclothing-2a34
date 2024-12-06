@@ -122,6 +122,7 @@ QSqlQuery client::searchClient(const QString &searchColumn, const QString &searc
     return query;
 }
 
+<<<<<<< HEAD
 bool sendEmail(const QString &email, const QString &subject, const QString &message) {
     // Simulate email sending logic (replace with actual email sending API or library)
     qDebug() << "Sending email to:" << email;
@@ -131,3 +132,5 @@ bool sendEmail(const QString &email, const QString &subject, const QString &mess
     // Simulate success for demonstration
     return true; // Return true if successful, false otherwise
 }
+=======
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b

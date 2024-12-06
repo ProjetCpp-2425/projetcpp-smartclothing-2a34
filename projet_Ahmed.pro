@@ -3,9 +3,12 @@ QT += sql
 QT += charts
 QT += widgets
 QT += core gui sql printsupport
+<<<<<<< HEAD
 QT += core gui sql network
 QT += network
 QT += core network
+=======
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

@@ -48,12 +48,17 @@ private slots:
     void on_Telecharger_button_clicked();
     void on_trier_activated(int index);
     void on_tableView_2_headerClicked(int section); // Handle header clicks for sorting
+<<<<<<< HEAD
     void classifyClients();
     void updateClientPurchase(const QString &cin, int purchaseIncrement);
 
 
     void on_envoyer_mail_clicked();
 
+=======
+
+
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 private:
     Ui::MainWindow *ui;
     client c;  // Global client object for operations
@@ -61,9 +66,12 @@ private:
     QMainWindow *statsWindow = nullptr;
     QSqlQueryModel *model; // Query model for dynamic queries
     bool sortOrderAscending; // Track sorting order
+<<<<<<< HEAD
     bool sendEmailUsingGmail(const QString &to, const QString &subject, const QString &body);
 
 
+=======
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 };
 
 

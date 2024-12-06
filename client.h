@@ -43,8 +43,11 @@ public:
     QSqlQueryModel* rechercher(const QString& keyword, const QString& field);
     QSqlQuery searchClient(const QString &searchColumn, const QString &searchTerm);
     QSqlQueryModel *getAllClients();
+<<<<<<< HEAD
     bool sendEmail(const QString &email, const QString &subject, const QString &message);
 
+=======
+>>>>>>> cf10cbcef7fddf4f44df658bfc97efcfc72b4d0b
 };
 
 #endif // CLIENT_H
