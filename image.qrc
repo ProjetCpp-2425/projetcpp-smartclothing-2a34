@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>ajouter.png</file>
+        <file>barchar2.png</file>
+        <file>barchart.png</file>
+        <file>dora.png</file>
+        <file>graph.png</file>
+        <file>icon.png</file>
+        <file>logoo.png</file>
+        <file>loupe (1).png</file>
+        <file>notf.png</file>
+        <file>notfication (1).png</file>
+        <file>notfication.png</file>
+        <file>out.png</file>
+        <file>para.png</file>
+    </qresource>
+</RCC>
