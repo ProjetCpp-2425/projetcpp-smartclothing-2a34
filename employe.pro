@@ -4,6 +4,8 @@ QT += core-private
 QT += charts
 QT += network
 QT += core gui serialport
+QT += axcontainer
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -67,7 +69,10 @@ HEADERS += \
     Article.h \
     arduinors.h \
     articlenotifier.h \
-    notification.h
+    client.h \
+    notification.h \
+    transaction.h \
+    vocale.h
 
 # Source Files
 SOURCES += \
@@ -105,7 +110,10 @@ SOURCES += \
     $$PWD/QXlsx/QXlsx/source/xlsxzipwriter.cpp \
     Article.cpp \
     arduinors.cpp \
-    articlenotifier.cpp
+    articlenotifier.cpp \
+    client.cpp \
+    transaction.cpp \
+    vocale.cpp
 
 
 SOURCES += \

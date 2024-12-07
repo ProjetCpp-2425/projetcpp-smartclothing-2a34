@@ -13,5 +13,6 @@
         <file>notfication.png</file>
         <file>out.png</file>
         <file>para.png</file>
+        <file>stat.png</file>
     </qresource>
 </RCC>
