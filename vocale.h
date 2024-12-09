@@ -2,9 +2,8 @@
 #define VOCALE_H
 
 #include <QObject>
-#include <QProcess>
 #include <QString>
-#include <QDebug>
+#include <QProcess>
 
 class Vocale : public QObject
 {
@@ -14,16 +13,15 @@ public:
     explicit Vocale(QObject *parent = nullptr);
     ~Vocale();
 
-    void startCapture();
-    void stopCapture();
+    void startAudioCapture(); // Démarre l'enregistrement vocal
+    void stopAudioCapture();  // Stoppe l'enregistrement vocal
 
 signals:
-    void textCaptured(const QString &text);
+    void textCaptured(QString text); // Signal pour transmettre le texte capturé
 
 private:
-    QProcess *process;
-    bool isCapturing;
-    void handleOutput();
+    QProcess *process; // Gère le processus Python
+
 };
 
 #endif // VOCALE_H

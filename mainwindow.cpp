@@ -10,6 +10,8 @@
 #include <QtCharts/QChartView>
 #include <QDesktopServices>
 #include <QSystemTrayIcon>
+#include <cstdlib> // Pour utiliser rand() et srand()
+#include <ctime>   // Pour initialiser le générateur de nombres aléatoires
 
 #include <QtCharts/QChart>
 #include <QtCharts/QBarSeries>
@@ -107,7 +109,10 @@ MainWindow::MainWindow(QWidget *parent)
  notifyAnniversary();
  notifyLowStock();
  notifyPromotion();
-
+     //chatbot
+ /*connect(ui->pushButton_chatbot_query, &QPushButton::clicked, this, &MainWindow::on_pushButton_chatbot_query_clicked);
+ connect(networkManager, &QNetworkAccessManager::finished, this, &MainWindow::handleChatbotReply);
+*/
  connect(ui->pushButton_notifyAnniversary, &QPushButton::clicked, this, &MainWindow::notifyAnniversary);
  connect(ui->pushButton_notifyLowStock, &QPushButton::clicked, this, &MainWindow::notifyLowStock);
  connect(ui->pushButton_notifyPromotion, &QPushButton::clicked, this, &MainWindow::notifyPromotion);
@@ -181,14 +186,12 @@ MainWindow::MainWindow(QWidget *parent)
      }
  });
 
- vocaleHandler->startCapture();
- vocaleHandler->stopCapture();  // Stop capturing
 
 
- connect(ui->ajouter_2, &QPushButton::clicked, this, &MainWindow::on_ajouter_clicked);
+ connect(ui->ajouterTransaction, &QPushButton::clicked, this, &MainWindow::on_ajouterTransaction_clicked);
  connect(ui->supprimer_2, &QPushButton::clicked, this, &MainWindow::on_supprimer_clicked);
  connect(ui->modifier, &QPushButton::clicked, this, &MainWindow::on_modifier_clicked);
- connect(ui->rechercher_2, &QPushButton::clicked, this, &MainWindow::on_recherchertr_clicked);
+ connect(ui->rechercherTransaction, &QPushButton::clicked, this, &MainWindow::on_rechercherTransaction_clicked);
  connect(ui->statistiqueButtonTransaction, &QPushButton::clicked, this, &MainWindow::on_statistiqueButtonTransaction_clicked);
  connect(ui->tri, &QPushButton::clicked, this, &MainWindow::on_tri_clicked);
  connect(ui->pdf, &QPushButton::clicked, this, &MainWindow::on_pdf_clicked);
@@ -808,7 +811,7 @@ void MainWindow::displayPosteStatistics() {
 
     QChart *chart = new QChart();
     chart->addSeries(series);
-    chart->setTitle("Employee Count by Poste");
+    chart->setTitle("Nombre d'employés par poste");
     chart->setAnimationOptions(QChart::AllAnimations);
 
     chart->setBackgroundBrush(QBrush(QColor(251, 251, 243)));
@@ -907,7 +910,7 @@ void MainWindow::on_sendButton_clicked() {
     }
 }
 void MainWindow::sendSms(const QString &phoneNumber, const QString &message) {
-
+   //
     const QString apiUrl = "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json";
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
@@ -2769,7 +2772,7 @@ void MainWindow::readFromArduino() {
 
     qDebug() << "Received from Arduino:" << input;
 
-    QString prefix = "ID sent to Qt: ";
+    QString prefix = "ID envoye a Qt: ";
     QString responsePrefix = "Received from Qt: MSG:";
 
     if (input.startsWith(prefix)) {
@@ -2858,7 +2861,8 @@ void MainWindow::updateEmployeeStatus(Employe &employee) {
 
 
 //duaa
-void MainWindow::on_ajouter_clicked() {
+
+void MainWindow::on_ajouterTransaction_clicked() {
     // Validation de l'ID de transaction
     int idTransaction = ui->l1->text().toInt();
     if (idTransaction <= 0) {
@@ -2920,16 +2924,14 @@ void MainWindow::on_ajouter_clicked() {
 
     // Validation de la date
     QDateTime dateAjout = ui->date->dateTime();
-    // Validation de la méthode de paiement (doit être sélectionnée)
     QString methodePaiement = ui->box->currentText();
     if (methodePaiement.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Veuillez sélectionner une méthode de paiement.");
         return;
     }
 
-    // Si tout est valide, on appelle la méthode d'ajout
     if (newTransaction.ajouter(idTransaction, dateAjout, listeArticles, taxes, reduction, montant, methodePaiement, cin, status)) {
-        ui->tableViewtransaction->setModel(transactionModel.afficher());
+        ui->tableView->setModel(transactionModel.afficher());
         transactionModel.addToHistory("Ajouter",idTransaction);
         QMessageBox::information(this, "Succès", "Transaction ajoutée avec succès.");
     } else {
@@ -2944,7 +2946,7 @@ void MainWindow::on_supprimer_clicked() {
 
     if (test) {
 
-        ui->tableViewtransaction->setModel(transactionModel.afficher());
+        ui->tableView->setModel(transactionModel.afficher());
         transactionModel.addToHistory("Supprimer",IDTRANSACTION);
 
         QMessageBox::information(this, QObject::tr("Succès"),
@@ -2956,7 +2958,7 @@ void MainWindow::on_supprimer_clicked() {
 }
 
 void MainWindow::on_modifier_clicked() {
-    // Récupération de l'ID de transaction
+
     int idTransaction = ui->l7->text().toInt();
     qDebug() << "ID de transaction récupéré :" << idTransaction;
     if (idTransaction <= 0) {
@@ -2971,7 +2973,7 @@ void MainWindow::on_modifier_clicked() {
         return;
     }
 
-    // Récupérer les autres champs de la transaction
+
     QString listeArticles = ui->l3->text();
     if (listeArticles.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Veuillez entrer une liste d'articles valide.");
@@ -3018,14 +3020,14 @@ void MainWindow::on_modifier_clicked() {
         return;
     }
 
-    // Création d'un objet Transaction et mise à jour dans la base de données
+
     Transaction updatedTransaction(idTransaction, dateAjout, listeArticles, taxes, reduction, montant, methodePaiement, cin, status);
-    // Appel de la fonction modifier en lui passant tous les arguments nécessaires
+
     bool success = updatedTransaction.modifier(idTransaction, dateAjout, listeArticles, taxes, reduction, montant, methodePaiement, cin, status);
 
     if (success) {
         transactionModel.addToHistory("modifier",idTransaction);
-        ui->tableViewtransaction->setModel(transactionModel.afficher());  // Mettre à jour l'affichage des transactions
+        ui->tableView->setModel(transactionModel.afficher());
         QMessageBox::information(this, "Succès", "Transaction modifiée avec succès.");
     } else {
         QMessageBox::warning(this, "Erreur", "Erreur lors de la modification de la transaction.");
@@ -3034,104 +3036,104 @@ void MainWindow::on_modifier_clicked() {
 void MainWindow::on_pdf_clicked() {
     QString nomFichier = QFileDialog::getSaveFileName(this, "Enregistrer le PDF", "", "Fichiers PDF (*.pdf)");
     if (!nomFichier.isEmpty()) {
-        // Modèle de données des transactions
-        QSqlQueryModel *model = transactionModel.afficher();  // Assurez-vous que vous avez une fonction afficher() qui renvoie un QSqlQueryModel
 
-        // Appel de la méthode pour exporter au format PDF
+        QSqlQueryModel *model = transactionModel.afficher();
+
+
         Transaction transaction;
         transaction.exporterPDF(nomFichier, model);
 
-        // Libération de la mémoire
+
         delete model;
         transactionModel.addToHistory("PDF",0);
     }
 }
-void MainWindow::on_tri_clicked() {
-    // Créer un modèle trié par date (récent -> ancien)
-    QSqlQueryModel *model = transactionModel.trierParDate();  // Utilisez la fonction trierParDate de votre modèle
+void MainWindow::on_tri_clicked(){
 
-    // Vérifiez si des données sont présentes dans le modèle
+    QSqlQueryModel *model = transactionModel.trierParDate();
+
+
     if (model && model->rowCount() > 0) {
-        // Mettre à jour la table avec les données triées
-        ui->tableViewtransaction->setModel(model);
+
+        ui->tableView->setModel(model);
         transactionModel.addToHistory("Trier",0);
         QMessageBox::information(this, "Tri par Date", "Transactions triées du plus récent au plus ancien.");
     } else {
-        // Affiche un message si aucune donnée n'est trouvée
+
         QMessageBox::warning(this, "Aucune donnée", "Aucune transaction trouvée.");
     }
 }
-void MainWindow::on_recherchertr_clicked() {
-    int idTransaction = ui->recherche->text().toInt();  // Récupérer l'ID de transaction depuis l'interface
+void MainWindow::on_rechercherTransaction_clicked() {
+    int idTransaction = ui->recherche->text().toInt();
     if (idTransaction == 0) {
         QMessageBox::warning(this, "Erreur", "Veuillez entrer un ID valide (entier) pour la recherche.");
         return;
     }
 
-    // Appeler la fonction rechercher avec l'ID de transaction
+
     QSqlQueryModel* model = transactionModel.rechercher(idTransaction);
 
     if (model && model->rowCount() > 0) {
-        // Si des résultats sont trouvés, les afficher dans le QtableViewtransaction
-        ui->tableViewtransaction->setModel(model);
+
+        ui->tableView->setModel(model);
         transactionModel.addToHistory("Rechercher",idTransaction);
         QMessageBox::information(this, "Recherche réussie", "La transaction a été trouvée.");
     } else {
-        // Si aucun résultat n'est trouvé
+
         QMessageBox::warning(this, "Erreur", "La transaction n'a pas été trouvée dans la base de données.");
-        delete model;  // Libérer la mémoire si aucun résultat
+        delete model;
     }
 }
 void MainWindow::on_statistiqueButtonTransaction_clicked() {
     QMap<QString, double> stats = transactionModel.statistiquesParStatut();
 
-    // Calculer le total des transactions
+
     double totalTransactions = 0;
     for (auto it = stats.constBegin(); it != stats.constEnd(); ++it) {
         totalTransactions += it.value();
     }
 
-    // Vider le layout avant d'ajouter un nouveau graphique
+
     QLayoutItem* item;
     while ((item = ui->transactionLayout->takeAt(0)) != nullptr) {
         delete item->widget();
         delete item;
     }
 
-    // Créer un pie series pour le graphique
+
     QPieSeries *series = new QPieSeries();
 
-    // Ajouter les données de statut dans le graphique avec le pourcentage
+
     int index = 0;
     for (auto it = stats.constBegin(); it != stats.constEnd(); ++it, ++index) {
         QString label = QString("%1: %2%").arg(it.key()).arg(it.value(), 0, 'f', 1);
         QPieSlice *slice = series->append(label, it.value());
 
-        // Appliquer des couleurs personnalisées
+
         if (index == 0) {
-            slice->setBrush(QColor(212, 153, 162)); // Couleur pour le premier segment
+            slice->setBrush(QColor(212, 153, 162));
         } else if (index == 1) {
-            slice->setBrush(QColor(209, 168, 213)); // Couleur pour le second segment
+            slice->setBrush(QColor(209, 168, 213));
         }
     }
 
-    // Créer un graphique à partir de la série
+
     QChart *chart = new QChart();
     chart->addSeries(series);
     chart->setTitle("Statistiques des transactions par statut");
 
-    // Créer un chart view pour afficher le graphique
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);  // Améliorer l'anti-aliasing
 
-    // Afficher le graphique dans le layout
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+
     ui->transactionLayout->addWidget(chartView);
     transactionModel.addToHistory("Statistique",0);
 
 }
 
 void MainWindow::afficherHistoriqueTransaction() {
-    QString cheminFichier = "C:/Users/DELL/Desktop/employe/historique_transaction.txt";
+    QString cheminFichier = "C:/DELL/Desktop/employe/historique_transaction.txt";
     QFile file(cheminFichier);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier d'historique des transactions.");
@@ -3149,7 +3151,7 @@ void MainWindow::afficherHistoriqueTransaction() {
 }
 
 void MainWindow::on_pb_historiqueTransaction_clicked() {
-    QString cheminFichier = "C:/Users/DELL/Desktop/employe/historique_transaction.txt";
+    QString cheminFichier = "C:/DELL/Desktop/employe/historique_transaction.txt";
     QDesktopServices::openUrl(QUrl::fromLocalFile(cheminFichier));
     QMessageBox::information(this, "Historique", "Les actions ont été enregistrées dans l'historique des transactions.");
 }
@@ -3158,16 +3160,67 @@ void MainWindow::on_pb_historiqueTransaction_clicked() {
 
 void MainWindow::on_stop_voc_clicked()
 {
-    qDebug() << "Stop vocale button clicked.";  // Afficher un message lorsque le bouton stop est cliqué
-    vocaleHandler->stopCapture();  // Arrêter la capture audio
+    qDebug() << "Stop vocale button clicked.";
+    vocaleHandler->stopAudioCapture();
 }
 
 
 void MainWindow::on_vocale_clicked()
 {
 
-    qDebug() << "Vocale button clicked.";  // Afficher un message lorsque le bouton vocale est cliqué
-    vocaleHandler->startCapture();  // Démarrer la capture audio
+    qDebug() << "Vocale button clicked.";
+    vocaleHandler->startAudioCapture();
+}
+
+
+#include <cstdlib> // Pour utiliser rand() et srand()
+#include <ctime>   // Pour initialiser le générateur de nombres aléatoires
+
+void MainWindow::on_stop_voc_2_clicked() {
+    // Lire la valeur de détection depuis l'interface utilisateur
+    int detection = ui->detection->text().toInt();
+
+    if (detection == 1) {
+        // Si detection est 1, envoyer "PAS DETECTION" à l'Arduino
+        QString message = "PAS DETECTION";
+        QByteArray data = message.toUtf8();
+        qDebug() << data;
+        arduino.writeToArduino(data);
+        ui->detection->clear(); // Réinitialiser le champ de saisie
+    } else {
+        // Si detection est 0, récupérer un employé aléatoire avec état "présent"
+        QSqlQuery query;
+
+        // Préparer la requête SQL pour sélectionner les employés présents
+        query.prepare("SELECT nom FROM employee WHERE PRESENCE = 'present'");
+
+        if (query.exec()) {
+            // Stocker tous les noms d'employés dans une liste
+            QStringList employeeNames;
+            while (query.next()) {
+                employeeNames << query.value(0).toString();
+            }
+
+            // Vérifier si des employés sont trouvés
+            if (!employeeNames.isEmpty()) {
+                // Sélectionner un employé au hasard
+                std::srand(std::time(nullptr)); // Initialiser le générateur aléatoire
+                int randomIndex = std::rand() % employeeNames.size();
+                QString randomEmployee = employeeNames[randomIndex];
+
+                // Envoyer le nom de l'employé sélectionné à l'Arduino
+                QByteArray data = randomEmployee.toUtf8();
+                qDebug() << "Nom employé envoyé : " << data;
+                arduino.writeToArduino(data);
+
+
+            }
+        } else {
+            // Gérer une erreur dans l'exécution de la requête SQL
+            qDebug() << "Erreur dans l'exécution de la requête : " << query.lastError().text();
+
+        }
+    }
 }
 
 
@@ -3710,7 +3763,4 @@ void MainWindow::on_envoyer_mail_clicked() {
     // Enable clickable headers
     ui->tableViewclient_2->horizontalHeader()->setSectionsClickable(true);
 }
-
-
-
 

@@ -1,8 +1,11 @@
+import speech_recognition as sr
+import sys
+
 def recognize_speech():
     recognizer = sr.Recognizer()
     mic = sr.Microphone()
 
-    print("Script started from QT")
+    print("Script started from Qt")
     sys.stdout.flush()
 
     try:
@@ -13,8 +16,8 @@ def recognize_speech():
             print("Parlez maintenant... (Ctrl+C pour quitter)")
             sys.stdout.flush()
 
-            # Capture audio until one word is recognized
-            audio = recognizer.listen(source)  # Capture l'audio
+            # Capture audio
+            audio = recognizer.listen(source)
 
             print("Processing audio...")
             sys.stdout.flush()
@@ -27,11 +30,7 @@ def recognize_speech():
                 print(f"Recognized text: {recognized_text}")
                 sys.stdout.flush()
 
-                print(f"Final recognized text: {recognized_text}")
-                sys.stdout.flush()
-                
-                # Retourner le premier mot reconnu
-                return recognized_text  # Nous retournons uniquement le texte reconnu
+                return recognized_text
 
             except sr.UnknownValueError:
                 print("Impossible de comprendre l'audio.")
@@ -43,3 +42,6 @@ def recognize_speech():
     except Exception as e:
         print(f"Une erreur est survenue: {e}")
         sys.stdout.flush()
+
+if __name__ == "__main__":
+    recognize_speech()

@@ -1,98 +1,84 @@
-#include "Vocale.h"
-#include <QProcess>
-#include <QStringList>
+#include "vocale.h"
 #include <QDebug>
+#include <QDir>
 
-Vocale::Vocale(QObject *parent) : QObject(parent), process(nullptr), isCapturing(false)
-{
+Vocale::Vocale(QObject *parent) : QObject(parent), process(nullptr) {}
+
+Vocale::~Vocale() {
 }
-
-Vocale::~Vocale()
+void Vocale::startAudioCapture()
 {
-    // Clean up
-    if (process && process->state() == QProcess::Running) {
-        process->terminate();
-        process->waitForFinished();
+    qDebug() << "Current working directory: " << QDir::currentPath();
+    QDir::setCurrent("C:/Users/DELL/Desktop/employe/speech_to_text.py");
+    QProcess testPython;
+    testPython.start("python", QStringList() << "--version");
+    if (!testPython.waitForFinished()) {
+        qDebug() << "Python is not accessible in this environment.";
+    } else {
+        qDebug() << "Python version: " << testPython.readAllStandardOutput();
     }
-}
 
-void Vocale::startCapture()
-{
-    if (isCapturing) {
-        qDebug() << "Capture is already running.";
+    if (process) {
+        qDebug() << "Un processus est déjà en cours.";
         return;
     }
 
-    // Initialize the QProcess
+    qDebug() << "Starting audio capture...";
+
     process = new QProcess(this);
+    if (!process->waitForStarted()) {
+        qDebug() << "Failed to start the process. Error:" << process->errorString();
+    }
 
-    // Set the working directory (adjust if needed)
-    process->setWorkingDirectory("C:/Users/DELL/Desktop/employe");
-
-    // Set up the Python script path and arguments
-    QStringList arguments;
-    arguments << "C:/Users/DELL/Desktop/employe/speech_to_text.py";
-
-    // Start the process
-    process->start("python", arguments);
+    QString pythonExecutable = "python";
+    QString scriptPath = "C:/Users/DELL/Desktop/employe/speech_to_text.py";
+    if (!QFile::exists(scriptPath)) {
+        qDebug() << "Le script Python n'existe pas au chemin : " << scriptPath;
+        return;
+    }
 
     if (!process->waitForStarted()) {
-        qDebug() << "Failed to start the process.";
-        return;
+        qDebug() << "Failed to start the process. Error:" << process->errorString();
     }
 
-    qDebug() << "Process started successfully.";
+    qDebug() << "Script path: " << scriptPath;
 
-    // Connect the process' readyReadStandardOutput signal to the handleOutput slot
-    connect(process, &QProcess::readyReadStandardOutput, this, &Vocale::handleOutput);
+    connect(process, &QProcess::readyReadStandardOutput, [this]() {
+        QString output = process->readAllStandardOutput().trimmed();
 
-    isCapturing = true;
-    qDebug() << "Starting audio capture...";
-}
 
-void Vocale::stopCapture()
-{
-    if (process && process->state() == QProcess::Running) {
-        qDebug() << "Stopping the process...";
-        process->terminate();
-        process->waitForFinished();
-    } else {
-        qDebug() << "No process running to stop.";
-    }
-    isCapturing = false;
-}
-
-void Vocale::handleOutput()
-{
-    // Capture the output from the Python script
-    QString output = process->readAllStandardOutput().trimmed();
-    qDebug() << "Process Output: " << output;  // Debugging the output from the Python script
-
-    // Check if the output is empty, and if so, check for errors
-    if (output.isEmpty()) {
-        QString errorOutput = process->readAllStandardError().trimmed();
-        qDebug() << "Process Error Output: " << errorOutput;
-    }
-
-    // Process the output from the Python script
-    QStringList lines = output.split('\n', Qt::SkipEmptyParts);
-    for (const QString &line : lines) {
-        qDebug() << "Processing line: " << line;  // Debugging each line
-
-        if (line.contains("Recognized text:")) {
-            QString recognizedText = line.mid(QString("Recognized text:").length()).trimmed();
-
-            // Debugging the recognized text
-            qDebug() << "Recognized Text: " << recognizedText;
-
-            if (!recognizedText.isEmpty()) {
-                qDebug() << "Emitting textCaptured with: " << recognizedText;  // Debugging the text being emitted
-                emit textCaptured(recognizedText);  // Emit the recognized text
-            } else {
-                qDebug() << "No recognized text in the output.";
+        QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+        for (const QString &line : lines) {
+            if (line.contains("Recognized text:")) {
+                QString recognizedText = line.mid(QString("Recognized text:").length()).trimmed();
+                emit textCaptured(recognizedText);
             }
-        } else {
-            qDebug() << "Line does not contain recognized text.";
         }
+    });
+
+
+    connect(process, &QProcess::readyReadStandardError, [this]() {
+        QString error = process->readAllStandardError().trimmed();
+        qDebug() << "Process error: " << error;
+    });
+
+    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [this](int exitCode, QProcess::ExitStatus exitStatus) {
+        qDebug() << "Python process finished with exit code: " << exitCode << " and exit status: " << exitStatus;
+    });
+
+    qDebug() << "Starting process...";
+    process->start(pythonExecutable, QStringList() << scriptPath);
+    if (!process->waitForStarted()) {
+        qDebug() << "Failed to start the process.";
+    }
+}
+
+void Vocale::stopAudioCapture()
+{
+    if (process) {
+        process->terminate();
+        process->deleteLater();
+        process = nullptr;
+        qDebug() << "Process stopped.";
     }
 }

@@ -208,12 +208,13 @@ private slots:
 
 
 
-    void on_ajouter_clicked();  // Slot pour ajouter une transaction
+    void on_ajouterTransaction_clicked();  // Slot pour ajouter une transaction
     void on_supprimer_clicked();  // Slot pour supprimer une transaction
     void on_modifier_clicked();  // Slot pour modifier une transaction
-    void on_pdf_clicked();  // Slot pour exporter en PDF
+    void on_pdf_clicked();
+
     void on_tri_clicked();  // Slot pour trier les transactions
-    void on_recherchertr_clicked();  // Slot pour rechercher des transactions
+    void on_rechercherTransaction_clicked();  // Slot pour rechercher des transactions
     void on_statistiqueButtonTransaction_clicked();
     void afficherHistoriqueTransaction();
     void on_pb_historiqueTransaction_clicked();
@@ -221,6 +222,7 @@ private slots:
     // void on_HistoriqueButton_Clicked();
     void on_stop_voc_clicked();
     void on_vocale_clicked();
+    void on_stop_voc_2_clicked();
 
     void on_btnAjouter_clicked();
 
@@ -243,11 +245,7 @@ private:
     QSqlQueryModel *employeModel;
     QString verificationCode;
     ARTICLE ART;
-    Transaction transactionModel;  // Votre modèle de transaction
     //QPushButton *historiqueButton;  // Bouton pour afficher l'historique
-    QTableView *tableView;  // Vue de la table pour afficher les transactions
-    Vocale *vocaleHandler;
-
 
     void afficherEmployes();
     void generateExcelRepor();
@@ -269,6 +267,13 @@ private:
     QSqlQueryModel *model; // Query model for dynamic queries
     bool sortOrderAscending; // Track sorting order
     bool sendEmailUsingGmail(const QString &to, const QString &subject, const QString &body);
+
+    Transaction transactionModel;  // Votre modèle de transaction
+    //QPushButton *historiqueButton;  // Bouton pour afficher l'historique
+    QTableView *tableView;  // Vue de la table pour afficher les transactions
+    Vocale *vocaleHandler;
+    void onTrierParDate();   // Slot pour trier par date récente
+    void onTrierParMontant();
 };
 
 #endif
