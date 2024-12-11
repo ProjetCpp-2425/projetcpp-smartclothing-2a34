@@ -12,12 +12,19 @@ public:
     int connectToArduino();
     QByteArray readFromArduino();
     void writeToArduino(const QByteArray &data);
+
+    void dataUpdated(int totalEntries, int totalExits, int currentOccupancy);
+    void readSerialData();
+
     QSerialPort *getSerial() const;
 
 private:
     QSerialPort *serial;
     QString portName;
     bool isAvailable;
+    int totalEntries;
+    int totalExits;
+    int currentOccupancy;
 };
 
 #endif // ARDUINORS_H

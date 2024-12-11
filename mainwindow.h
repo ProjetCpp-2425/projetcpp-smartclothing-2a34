@@ -7,13 +7,17 @@
 #include "employe.h"
 #include "connection.h"
 #include "arduinors.h"
+#include "client.h"
+#include "arduinod.h"
 
 #include "Article.h"
 #include "articlenotifier.h"
 #include "notification.h"
 
 #include "connection.h"
-
+#include <QTableView>
+#include "transaction.h"
+#include "vocale.h"
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
@@ -27,6 +31,7 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "arduino.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -197,17 +202,67 @@ private slots:
     void handleChatbotReply(QNetworkReply* reply);
 
     void setupLineEditCompletion();
-void onArduinoDataReceived();
-    void saveFingerprint();    // Slot triggered when Arduino sends data
+//void onArduinoDataReceived();
+   // void saveFingerprint();    // Slot triggered when Arduino sends data
 
-    void readArduinoData();
+    void readFromArduino();
+
+
+
+//duaa
+    void on_ajouterTransaction_clicked();  // Slot pour ajouter une transaction
+    void on_supprimer_clickedt();  // Slot pour supprimer une transaction
+    void on_modifier_clicked();  // Slot pour modifier une transaction
+    void on_pdf_clicked();
+
+    void on_tri_clicked();  // Slot pour trier les transactions
+    void on_rechercherTransaction_clicked();  // Slot pour rechercher des transactions
+    void on_statistiqueButtonTransaction_clicked();
+    void afficherHistoriqueTransaction();
+    void on_pb_historiqueTransaction_clicked();
+    //void on_statistique_clicked();  // Slot pour afficher les statistiques
+    // void on_HistoriqueButton_Clicked();
+    void on_stop_voc_clicked();
+    void on_vocale_clicked();
+    void on_stop_voc_2_clicked();
+
+    void on_btnAjouter_clicked();
+
+    void on_modifiercl_clicked();
+    void on_supprimercl_clicked();
+    void on_afficher_clicked();
+    void on_searchButton_clicked();
+    void on_statsButton_clicked();
+    void on_Telecharger_button_clicked();
+    void on_trier_activated(int index);
+    void on_tableView_2_headerClicked(int section); // Handle header clicks for sorting
+
+    void classifyClients();
+    void updateClientPurchase(const QString &cin, int purchaseIncrement);
+    void on_envoyer_mail_clicked();
+    void affichageClient();
+
+    void on_precedent2_clicked();
+
+    void on_precedent3_clicked();
+
+    void on_presedent4_clicked();
+    void updateDisplay(int totalEntries, int totalExits, int currentOccupancy);
+
+    void on_annuler_2_clicked();
 
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *employeModel;
     QString verificationCode;
     ARTICLE ART;
+    Arduino *arduinoa;
+    Arduinod A;
 
+    int totalEntries = 0;
+    int totalExits = 0;
+    int currentOccupancy = 0;
+    //QPushButton *historiqueButton;  // Bouton pour afficher l'historique
 
     void afficherEmployes();
     void generateExcelRepor();
@@ -222,6 +277,20 @@ private:
     QByteArray dataFromArduino; // To receive data from Arduino
     //void handleFingerprintScan(); // Function to process fingerprint data
     void updateEmployeeStatus(Employe &employee); //
+
+    client c;  // Global client object for operations
+    QChartView *chartView; // Chart view for statistics
+    QMainWindow *statsWindow = nullptr;
+    QSqlQueryModel *model; // Query model for dynamic queries
+    bool sortOrderAscending; // Track sorting order
+    bool sendEmailUsingGmail(const QString &to, const QString &subject, const QString &body);
+
+    Transaction transactionModel;  // Votre modèle de transaction
+    //QPushButton *historiqueButton;  // Bouton pour afficher l'historique
+    QTableView *tableView;  // Vue de la table pour afficher les transactions
+    Vocale *vocaleHandler;
+    void onTrierParDate();   // Slot pour trier par date récente
+    void onTrierParMontant();
 };
 
 #endif

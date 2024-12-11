@@ -12,8 +12,12 @@ ArduinoRS::~ArduinoRS() {
 
 int ArduinoRS::connectToArduino() {
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
+        qDebug() << "Found port:" << info.portName()
+        << "Vendor ID:" << info.vendorIdentifier()
+        << "Product ID:" << info.productIdentifier();
 
-        if (info.vendorIdentifier() == 0x2341 && info.productIdentifier() == 0x0043) {  // Vendor ID and Product ID for Arduino Uno
+        // Update Vendor ID and Product ID based on your Arduino
+        if (info.vendorIdentifier() == 0x6790 && info.productIdentifier() == 0x29987) {
             portName = info.portName();
             serial->setPortName(portName);
             serial->setBaudRate(QSerialPort::Baud9600);
@@ -25,16 +29,30 @@ int ArduinoRS::connectToArduino() {
             if (serial->open(QIODevice::ReadWrite)) {
                 isAvailable = true;
                 qDebug() << "Connected to Arduino on port:" << portName;
-                return 1;  // Successful connection
+                return 1;
             } else {
                 qDebug() << "Failed to open port:" << serial->errorString();
-                return 0;  // Failed to open port
+                return 0;
             }
         }
     }
+
+    // Manual fallback for known port
+    portName = "COM6";  // Replace with your COM port if necessary
+    serial->setPortName(portName);
+    serial->setBaudRate(QSerialPort::Baud9600);
+    if (serial->open(QIODevice::ReadWrite)) {
+        isAvailable = true;
+        qDebug() << "Connected to Arduino on port:" << portName;
+        return 1;
+    }
+
     qDebug() << "No matching Arduino found.";
-    return 0;  // No matching Arduino found
+    return 0;  // No Arduino found
 }
+
+
+
 
 QByteArray ArduinoRS::readFromArduino() {
     if (serial->canReadLine()) {

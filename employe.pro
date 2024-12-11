@@ -4,10 +4,14 @@ QT += core-private
 QT += charts
 QT += network
 QT += core gui serialport
+QT += axcontainer
+QT +=serialport
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
+QT += core xml
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -64,10 +68,15 @@ HEADERS += \
     $$PWD/QXlsx/QXlsx/header/xlsxworksheet_p.h \
     $$PWD/QXlsx/QXlsx/header/xlsxzipreader_p.h \
     $$PWD/QXlsx/QXlsx/header/xlsxzipwriter_p.h \
-    Article.h \
+     Article.h \
+    arduino.h \
+    arduinod.h \
     arduinors.h \
     articlenotifier.h \
-    notification.h
+    client.h \
+    notification.h \
+    transaction.h \
+    vocale.h
 
 # Source Files
 SOURCES += \
@@ -103,9 +112,14 @@ SOURCES += \
     $$PWD/QXlsx/QXlsx/source/xlsxworksheet.cpp \
     $$PWD/QXlsx/QXlsx/source/xlsxzipreader.cpp \
     $$PWD/QXlsx/QXlsx/source/xlsxzipwriter.cpp \
-    Article.cpp \
+     Article.cpp \
+    arduino.cpp \
+    arduinod.cpp \
     arduinors.cpp \
-    articlenotifier.cpp
+    articlenotifier.cpp \
+    client.cpp \
+    transaction.cpp \
+    vocale.cpp
 
 
 SOURCES += \
