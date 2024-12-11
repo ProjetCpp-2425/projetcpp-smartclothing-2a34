@@ -452,7 +452,6 @@ void MainWindow::on_annuler_clicked()
     ui->dateEmbaucheLineEdit->clear();
     ui->dateNaissanceLineEdit->clear();
     ui->suppLineEdit->clear();
-    ui->message->clear();
 }
 void MainWindow::sortclicked()
 {
@@ -928,7 +927,7 @@ void MainWindow::on_sendButton_clicked() {
     }
 }
 void MainWindow::sendSms(const QString &phoneNumber, const QString &message) {
-   //
+
     const QString apiUrl = "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json";
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
@@ -1703,24 +1702,12 @@ void MainWindow::populateThemeBox()
 
 void MainWindow::populateAnimationBox()
 {
-    // add items to animation combobox
-    ui->animatedComboBox->addItem("No Animations", QChart::NoAnimation);
-    ui->animatedComboBox->addItem("GridAxis Animations", QChart::GridAxisAnimations);
-    ui->animatedComboBox->addItem("Series Animations", QChart::SeriesAnimations);
-    ui->animatedComboBox->addItem("All Animations", QChart::AllAnimations);
-
-    connect(ui->animatedComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::changeAnimation);
-
+   //
 }
 
 void MainWindow::populateLegendBox()
 {
-    // add items to legend combobox
-    ui->legendComboBox->addItem("No Legend ", 0);
-    ui->legendComboBox->addItem("Legend Top", Qt::AlignTop);
-    ui->legendComboBox->addItem("Legend Bottom", Qt::AlignBottom);
-    ui->legendComboBox->addItem("Legend Left", Qt::AlignLeft);
-    ui->legendComboBox->addItem("Legend Right", Qt::AlignRight);
+   //dComboBox->addItem("Legend Right", Qt::AlignRight);
 }
 
 
@@ -1761,11 +1748,7 @@ void MainWindow::changeTheme(int index)
 
 void MainWindow::changeAnimation(int index)
 {
-    QChart::AnimationOptions animationOption = static_cast<QChart::AnimationOptions>(ui->animatedComboBox->itemData(index).toInt());
-
-    for (QChartView *chartView : m_charts) {  // m_charts est un QVector<QChartView*>
-        chartView->chart()->setAnimationOptions(animationOption);
-    }
+   //
 }
 
 void MainWindow::on_Ajouter_clicked() {
@@ -3868,6 +3851,47 @@ void MainWindow::on_annuler_2_clicked()
 
 
 
+
+}
+
+
+void MainWindow::on_buttonanuuler_clicked()
+{
+    ui->lineEditsupp->clear();
+
+
+}
+
+
+
+void MainWindow::on_pushButton_12_clicked()
+{
+    ui->lineEdit_CODE->clear();
+    ui->lineEdit_NOM->clear();
+    ui->dateTimeEdit_2->clear();
+    ui->lineEdit_DESCRIPTION->clear();
+
+    ui->radioButton_Automne->setChecked(false);
+    ui->radioButton_Hiver->setChecked(false);
+    ui->radioButton_Ete->setChecked(false);
+    ui->radioButton_Printemps->setChecked(false);
+
+    ui->doubleSpinBox_2->clear();
+    ui->spinBox_Quantite->clear();
+
+
+    ui->checkBox_Blanc->setChecked(false);
+    ui->checkBox_Noir->setChecked(false);
+    ui->checkBox_Bleu->setChecked(false);
+    ui->checkBox_Gris->setChecked(false);
+    ui->checkBox_Rouge->setChecked(false);
+    ui->checkBox_Beige->setChecked(false);
+    ui->checkBox_Vert->setChecked(false);
+    ui->checkBox_Rose->setChecked(false);
+    ui->checkBox_Marron->setChecked(false);
+    ui->checkBox_Jaune->setChecked(false);
+    ui->checkBox_Violet->setChecked(false);
+    ui->checkBox_Orange->setChecked(false);
 
 }
 

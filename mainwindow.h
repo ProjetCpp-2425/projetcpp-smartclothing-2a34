@@ -251,6 +251,12 @@ private slots:
 
     void on_annuler_2_clicked();
 
+
+    void on_buttonanuuler_clicked();
+
+
+    void on_pushButton_12_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *employeModel;
