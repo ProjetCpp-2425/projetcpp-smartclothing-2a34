@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.JavaPi.Controllers.UsageControllers"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- Category -->
+    <Label layoutX="50" layoutY="50" text="Catégorie :"/>
+    <ComboBox fx:id="categoryField" layoutX="200" layoutY="46" prefWidth="200"/>
+
+    <!-- Date -->
+    <Label layoutX="50" layoutY="120" text="Date :"/>
+    <DatePicker fx:id="dateField" layoutX="200" layoutY="116" prefWidth="200"/>
+
+    <!-- Boutons -->
+    <Button layoutX="100" layoutY="200" text="Ajouter" onAction="#ajouter"/>
+    <Button layoutX="220" layoutY="200" text="Modifier" onAction="#modifier"/>
+    <Button layoutX="340" layoutY="200" text="Supprimer" onAction="#supprimer"/>
+
+    <!-- TableView -->
+    <TableView fx:id="usageTable" layoutX="50" layoutY="260" prefWidth="500" prefHeight="200">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="categoryCol" text="Catégorie" prefWidth="200"/>
+            <TableColumn fx:id="dateCol" text="Date" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+</AnchorPane>
